@@ -20,6 +20,37 @@ struct SomeClass
     }
 };
 
+void investigateIteratorInvalidation()
+{
+    {
+        std::vector<int> data {1, 2, 3, 4, 5};
+        for (auto& element : data) { // invalidation in loop, very common error case
+            data.push_back(element * 2);
+            data.erase(data.begin() + element);
+        }
+    }
+    {
+        std::vector<int> data (5);
+        auto p1 = data.begin();
+        data.push_back(2);   // p1 may have been invalidated, since the capacity was unknown.
+
+        data.reserve(20);    // Capacity is now at least 20.
+        auto p2 = data.begin();
+        data.push_back(4);   // p2 is *not* invalidated, since the size of `v` is now 7.
+        data.insert(data.end(), 30, 9); // Inserts 30 elements at the end. The size exceeds the
+        // requested capacity of 20, so `p2` is (probably) invalidated.
+        auto p3 = data.begin();
+        data.reserve(data.capacity() + 20); // Capacity exceeded, thus `p3` is invalid.
+    }
+    {
+        std::vector<int> data(10);
+        auto p1 = data.begin();
+        auto p2 = data.begin() + 5;
+        data.erase(data.begin() + 3, data.end()); // `p2` is invalid, but `p1` remains valid.
+    }
+}
+
+
 void investigateConstructors1()
 {
     // CONSTRUCTORS
@@ -277,6 +308,10 @@ void investigateModifiers(std::vector<std::string>& data)
     std::cout << "After swapping, oldDiscoverage content: " << std::endl;
 
     newDiscoverage.swap(oldDiscoverage); // exchanges content
+    printVector(oldDiscoverage);
+
+    oldDiscoverage.erase(oldDiscoverage.begin()); // removes first element
+    std::cout << "After erasing first element old discoverage is: " << std::endl;
     printVector(oldDiscoverage);
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
