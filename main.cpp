@@ -50,6 +50,21 @@ void investigateIteratorInvalidation()
     }
 }
 
+void investigateReserve()
+{
+    std::vector<int> data;
+    data.reserve(1000);
+
+    for (int i = 0; i < 1000; ++i) { // will work faster, because preallocated
+        data.push_back(i);
+    }
+
+    std::vector<int> data1;
+    for (int i = 0; i < 1000; ++i) {
+        data1.push_back(i);
+    }
+}
+
 
 void investigateConstructors1()
 {
@@ -59,7 +74,7 @@ void investigateConstructors1()
         std::vector<int> data {}; // default constructor, empty container
 
         std::allocator<int> defaultAllocator {};
-        std::vector<int> data1 {defaultAllocator}; // default constructor, use allocator
+        std::vector<int, std::allocator<int>> data1 {defaultAllocator}; // default constructor, use allocator
 
         const size_t dataSize {42};
         // note: round braces!
@@ -360,6 +375,6 @@ void investigateOperations()
 int main()
 {
     investigateConstructors();
-    investigateOperations();
+//    investigateOperations();
     return 0;
 }
