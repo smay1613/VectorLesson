@@ -169,8 +169,9 @@ void investigateConstructors()
 template<class T>
 void printVector(const std::vector<T>& vectorToPrint)
 {
+    static const T defaultEntry {};
     for (const auto& entry : vectorToPrint) { // range for
-        if (entry == T {}) {
+        if (entry == defaultEntry) {
             std::cout << "<default entry>" << std::endl;
         } else {
             std::cout << entry << std::endl;
@@ -196,6 +197,8 @@ void investigateCapacityOperations(std::vector<std::string>& data)
     const size_t expectedSize {100};
     data.reserve(expectedSize); // reserve more
     data.reserve(expectedSize / 2); // reserve less
+
+    investigateReserve();
 
     std::cout << "File list capacity after reserve: " << data.capacity() << std::endl <<
                  "and size: " << data.size() << std::endl;
@@ -375,6 +378,6 @@ void investigateOperations()
 int main()
 {
     investigateConstructors();
-//    investigateOperations();
+    investigateOperations();
     return 0;
 }
