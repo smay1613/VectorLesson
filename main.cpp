@@ -240,7 +240,7 @@ void investigateAccessOperations(std::vector<std::string>& data)
     std::cout << "Last element: " << data.back() << std::endl; // read only access to the last element
 
     data.data()[1] = "Be careful when working with raw data!";
-    std::cout << "Second element: " << data.data()[1] << std::endl; // the same as &front() + 1
+    std::cout << "Second element: " << data.data()[1] << std::endl;
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
@@ -251,6 +251,7 @@ void investigateModifiers(std::vector<std::string>& data)
 
     data.clear(); // deletes the data
     data.shrink_to_fit(); // deallocate reserved
+    // or std::vector<std::string>().swap(data);
     std::cout << "List cleared! It's size now is " << data.size() <<
                  " and capacity is " << data.capacity() << std::endl;
     const size_t filesCount {6};
@@ -312,11 +313,16 @@ void investigateModifiers(std::vector<std::string>& data)
     data.insert(std::next(data.begin(), 2), discoveredFile); // adds an element to a specified position
     printVector(data);
 
+    data.insert(std::next(data.begin(), 2), 5, discoveredFile); // adds 5 elements to a specified position
+    printVector(data);
+
     std::cout << "After emplace insertion: " << std::endl;
     data.emplace(std::next(data.begin(), 3), "newfile.png"); // inserts inplace without copy
     printVector(data);
 
-    std::vector<std::string> newDiscoverage {".gitignore", "hellovector.cpp", "Makefile"};
+    std::vector<std::string> newDiscoverage {".gitignore",
+                                             "hellovector.cpp",
+                                             "Makefile"};
     std::cout << "New discoverage content: " << std::endl;
     printVector(newDiscoverage);
 
@@ -330,6 +336,10 @@ void investigateModifiers(std::vector<std::string>& data)
 
     oldDiscoverage.erase(oldDiscoverage.begin()); // removes first element
     std::cout << "After erasing first element old discoverage is: " << std::endl;
+    printVector(oldDiscoverage);
+
+    std::cout << "Erasing all: " << std::endl;
+    oldDiscoverage.erase(oldDiscoverage.begin(), oldDiscoverage.end()); // removes elements
     printVector(oldDiscoverage);
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
