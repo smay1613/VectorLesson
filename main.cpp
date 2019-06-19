@@ -123,7 +123,7 @@ void investigateConstructors2()
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         {
             const size_t dataSize {4};
-            std::vector<SomeClass> data6 {dataSize};
+            std::vector<SomeClass> data6 (dataSize);
             std::cout << "Waiting for " << dataSize << " destructions:" << std::endl;
             // vector becomes out of scope, so RAII will clear data
         }
